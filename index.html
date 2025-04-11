@@ -51,6 +51,26 @@
       line-height: 1.6;
       border-left: 4px solid #4CAF50;
       padding-left: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    /* 文字區塊，方便取出要複製的內容 */
+    .quote-text {
+      flex: 1;
+    }
+    .copy-button {
+      margin-left: 1rem;
+      padding: 0.3rem 0.8rem;
+      font-size: 0.9rem;
+      border: none;
+      border-radius: 5px;
+      background-color: #2196f3;
+      color: white;
+      cursor: pointer;
+    }
+    .copy-button:hover {
+      background-color: #1976d2;
     }
   </style>
 </head>
@@ -217,7 +237,25 @@
       // 將該類別的語錄隨機排序後抽出 7 筆顯示
       const data = responses[type].sort(() => 0.5 - Math.random());
       const sampled = data.slice(0, 7);
-      output.innerHTML = sampled.map(text => `<div class="quote">${text}</div>`).join("");
+      output.innerHTML = sampled.map(text => 
+        `<div class="quote">
+          <span class="quote-text">${text}</span>
+          <button class="copy-button" onclick="copyQuote(this)">複製</button>
+        </div>`
+      ).join("");
+    }
+    
+    function copyQuote(btn) {
+      // 取得該筆語錄的文字內容
+      const quoteText = btn.parentElement.querySelector('.quote-text').innerText;
+      navigator.clipboard.writeText(quoteText)
+        .then(() => {
+          // 顯示臨時提示，這裡採用 alert，可根據需求自行修改提示方式
+          alert('已複製: ' + quoteText);
+        })
+        .catch(err => {
+          alert('複製失敗，請手動複製。');
+        });
     }
   </script>
 </body>
